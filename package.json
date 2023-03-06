@@ -1,0 +1,32 @@
+{
+  "name": "easy-storage",
+  "version": "1.0.0",
+  "description": "localstorage を操作しやすくするパッケージ",
+  "main": "main.js",
+  "scripts": {
+    "build": "webpack",
+    "test": "jest --env=jsdom"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kanagama/easy-storage.git"
+  },
+  "keywords": [
+    "vanillajs",
+    "localstorage"
+  ],
+  "author": "Kazuma Nagama <k.nagama0632@gmail.com> (https://github.com/kanagama)",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.4.3",
+    "jest-environment-jsdom": "^29.4.3",
+    "jest-localstorage-mock": "^2.4.26",
+    "uglify-js": "^3.17.4",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
+  },
+  "bugs": {
+    "url": "https://github.com/kanagama/easy-storage/issues"
+  },
+  "homepage": "https://github.com/kanagama/easy-storage#readme"
+}
