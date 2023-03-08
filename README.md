@@ -120,3 +120,13 @@ dist/easy-storage.min.js を作成します
 ```bash
 npm run build
 ```
+
+<br>
+
+## TypeScript コンパイル
+
+scr/easy-storage.js を作成します
+
+```bash
+npm run tsc
+```
