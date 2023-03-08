@@ -5,6 +5,7 @@ module.exports = {
   entry: './main.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'easystorage.min.js'
-  }
+    filename: 'easy-storage.min.js',
+    libraryTarget: 'umd',
+  },
 };

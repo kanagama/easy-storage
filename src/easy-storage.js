@@ -1,7 +1,28 @@
-const emptyKey = 'キーは必須です';
-
 class EasyStorage
 {
+  static emptyKey = 'キーは必須です';
+
+  /**
+   * @param {string} storageType
+   */
+  constructor(storageType)
+  {
+    if (!storageType) {
+      storageType = 'local';
+    }
+
+    switch (storageType) {
+      case 'local':
+        this.storage = localStorage;
+        break;
+      case 'session':
+        this.storage = sessionStorage;
+        break;
+      default:
+        throw new Error('種別は local もしくは session で指定してください');
+    }
+  }
+
   /**
    *
    * @param {string} key
@@ -10,7 +31,7 @@ class EasyStorage
   setItem(key, value)
   {
     if (!key) {
-      throw new Error(emptyKey);
+      throw new Error(EasyStorage.emptyKey);
     }
 
     // value がオブジェクトである場合、JSON.stringify() を使って文字列に変換します
@@ -18,7 +39,7 @@ class EasyStorage
       value = JSON.stringify(value);
     }
 
-    localStorage.setItem(key, value);
+    this.storage.setItem(key, value);
   }
 
   /**
@@ -27,10 +48,10 @@ class EasyStorage
   getItem(key)
   {
     if (!key) {
-      throw new Error(emptyKey);
+      throw new Error(EasyStorage.emptyKey);
     }
 
-    const value = localStorage.getItem(key);
+    const value = this.storage.getItem(key);
     if (value == null) {
       return null;
     }
@@ -48,10 +69,10 @@ class EasyStorage
   removeItem(key)
   {
     if (!key) {
-      throw new Error(emptyKey);
+      throw new Error(EasyStorage.emptyKey);
     }
 
-    localStorage.removeItem(key);
+    this.storage.removeItem(key);
   }
 
   /**
@@ -59,7 +80,7 @@ class EasyStorage
    */
   clear()
   {
-    localStorage.clear();
+    this.storage.clear();
   }
 
   /**
@@ -69,10 +90,10 @@ class EasyStorage
   hasItem(key)
   {
     if (!key) {
-      throw new Error(emptyKey);
+      throw new Error(EasyStorage.emptyKey);
     }
 
-    return localStorage.getItem(key) !== null;
+    return this.storage.getItem(key) !== null;
   }
 }
 

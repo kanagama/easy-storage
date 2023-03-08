@@ -1,5 +1,4 @@
 const { EasyStorage } = require('../main.js');
-const Es = new EasyStorage;
 
 const localStorageMock = (function() {
   let store = {};
@@ -16,9 +15,13 @@ const localStorageMock = (function() {
     },
     clear: function() {
       store = {};
-    }
+    },
+    hasItem: function() {
+      return store[key] !== undefined
+    },
   };
 })();
+const SessionStorageMock = localStorageMock;
 
 describe('setItem()', () => {
   beforeAll(() => {
@@ -28,14 +31,17 @@ describe('setItem()', () => {
     resetMock();
   });
 
-  it('文字列が正常にセットされる', () => {
+  it.each(eachParams())('文字列が正常にセットされる', (storage) => {
+    const Es = new EasyStorage(storage);
     const key = 'test-key';
     const value = 'test-value';
     Es.setItem(key, value);
 
     expect(localStorageMock.getItem(key)).toBe(value);
   });
-  it('オブジェクトが正常にセットされる', () => {
+
+  it.each(eachParams())('オブジェクトが正常にセットされる', (storage) => {
+    const Es = new EasyStorage(storage);
     const key = 'test-key';
     const value = { name: 'test' };
 
@@ -45,7 +51,8 @@ describe('setItem()', () => {
   });
 
   // 異常系のテスト
-  it('キーを指定しなければ例外が発生する', () => {
+  it.each(eachParams())('キーを指定しなければ例外が発生する', (storage) => {
+    const Es = new EasyStorage(storage);
     expect(() => Es.setItem()).toThrow('キーは必須です');
   });
 });
@@ -59,7 +66,8 @@ describe('getItem()', () => {
   });
 
   // 正常系のテスト
-  it('正常に文字列が取得できる', () => {
+  it.each(eachParams())('正常に文字列が取得できる', (storage) => {
+    const Es = new EasyStorage(storage);
     const key = 'test-key';
     const value = 'test-value';
     localStorageMock.setItem(key, value);
@@ -69,15 +77,16 @@ describe('getItem()', () => {
     expect(result).toBe(value);
   });
 
-  it('キーが存在しない場合はnullが返却される', () => {
+  it.each(eachParams())('キーが存在しない場合はnullが返却される', (storage) => {
+    const Es = new EasyStorage(storage);
     const key = 'nonexistent-key';
-
     const result = Es.getItem(key);
 
     expect(result).toBeNull();
   });
 
-  it('正常にjsonデータが取得できる', () => {
+  it.each(eachParams())('正常にjsonデータが取得できる', (storage) => {
+    const Es = new EasyStorage(storage);
     const key = 'test-key';
     const value = { name: 'test' };
     localStorageMock.setItem(key, JSON.stringify(value));
@@ -87,7 +96,8 @@ describe('getItem()', () => {
     expect(result).toEqual(value);
   });
 
-  it('キーを指定しなければ例外が発生する', () => {
+  it.each(eachParams())('キーを指定しなければ例外が発生する', (storage) => {
+    const Es = new EasyStorage(storage);
     expect(() => Es.getItem()).toThrow('キーは必須です');
   });
 });
@@ -100,7 +110,8 @@ describe('removeItem()', () => {
     resetMock();
   });
 
-  it('ローカルストレージから正常に削除される', () => {
+  it.each(eachParams())('ローカルストレージから正常に削除される', (storage) => {
+    const Es = new EasyStorage(storage);
     const key = 'test-key';
     const value = 'test-value';
     localStorageMock.setItem(key, value);
@@ -110,7 +121,8 @@ describe('removeItem()', () => {
     expect(localStorageMock.getItem(key)).toBeNull();
   });
 
-  it('キーを指定しなければ例外が発生する', () => {
+  it.each(eachParams())('キーを指定しなければ例外が発生する', (storage) => {
+    const Es = new EasyStorage(storage);
     expect(() => Es.removeItem()).toThrow('キーは必須です');
   });
 });
@@ -123,7 +135,8 @@ describe('clear()', () => {
     resetMock();
   });
 
-  it('全てのキーが正常に削除される', () => {
+  it.each(eachParams())('全てのキーが正常に削除される', (storage) => {
+    const Es = new EasyStorage(storage);
     localStorageMock.setItem('key1', 'value1');
     localStorageMock.setItem('key2', 'value2');
 
@@ -142,7 +155,8 @@ describe('hasItem', () => {
     resetMock();
   });
 
-  it('キーが存在している場合はtrue', () => {
+  it.each(eachParams())('キーが存在している場合はtrue', (storage) => {
+    const Es = new EasyStorage(storage);
     const key = 'test-key';
     const value = 'test-value';
     localStorageMock.setItem(key, value);
@@ -152,7 +166,8 @@ describe('hasItem', () => {
     expect(result).toBe(true);
   });
 
-  it('キーが存在しない場合はtrue', () => {
+  it.each(eachParams())('キーが存在しない場合はtrue', (storage) => {
+    const Es = new EasyStorage(storage);
     const key = 'nonexistent-key';
 
     const result = Es.hasItem(key);
@@ -160,7 +175,8 @@ describe('hasItem', () => {
     expect(result).toBe(false);
   });
 
-  it('キーを指定しなければ例外が発生する', () => {
+  it.each(eachParams())('キーを指定しなければ例外が発生する', (storage) => {
+    const Es = new EasyStorage(storage);
     expect(() => Es.hasItem()).toThrow('キーは必須です');
   });
 });
@@ -170,10 +186,37 @@ function setMock()
   Object.defineProperty(window, 'localStorage', {
     value: localStorageMock
   });
+  Object.defineProperty(window, 'sessionStorage', {
+    value: SessionStorageMock
+  });
 }
 function resetMock()
 {
   Object.defineProperty(window, 'localStorage', {
     value: global.localStorage
   });
+  Object.defineProperty(window, 'sessionStorage', {
+    value: global.sessionStorage
+  });
+}
+
+/**
+ * @returns {array}
+ */
+function eachParams()
+{
+  return [
+    [
+      null,
+    ],
+    [
+      '',
+    ],
+    [
+      'local',
+    ],
+    [
+      'session',
+    ],
+  ];
 }
