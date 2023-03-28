@@ -39,9 +39,9 @@ class EasyStorage
    * @method
    *
    * @param {string} key
-   * @param {Object|string} value
+   * @param {unknown|string} value
    */
-  setItem(key: string, value: Object | string): void {
+  setItem(key: string, value: unknown | string): void {
     if (!key) {
       throw new Error(EasyStorage.emptyKey);
     }

@@ -26,7 +26,7 @@ var EasyStorage = /** @class */ (function () {
      * @method
      *
      * @param {string} key
-     * @param {Object|string} value
+     * @param {unknown|string} value
      */
     EasyStorage.prototype.setItem = function (key, value) {
         if (!key) {

@@ -113,6 +113,17 @@ npm run test
 
 <br>
 
+
+## 静的解析
+
+ESLint にて静的解析を実行します
+
+```bash
+npm run static_analysis
+```
+
+<br>
+
 ## ビルド実行
 
 dist/easy-storage.min.js を作成します
